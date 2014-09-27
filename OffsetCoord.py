@@ -19,9 +19,8 @@ class OffsetCoord(object):
         return "OffsetCoord({}, {})".format(self.x, self.y)
     
     def __neg__(self):
-        return OffsetCoor(-self.x, self.y)
+        return OffsetCoord(-self.x, self.y)
 
-    @Trace
     def __add__(self, other):
         if not isinstance(other, OffsetCoord):
             other = OffsetCoord(other)
