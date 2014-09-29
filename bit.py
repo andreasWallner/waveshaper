@@ -34,8 +34,8 @@ class Instruction(object):
     
     lines = symbols[s]
     for line in lines:
-      c1 = self.at_start(line[0], painter)
-      c2 = self.at_end(line[1], painter)
+      c1 = line[0](self.width, painter.env)
+      c2 = line[1](self.width, painter.env)
       painter.draw_line(c1, c2)
 
   def render_background(self, painter):
@@ -49,7 +49,7 @@ class Instruction(object):
     transition = transitions[(painter.last_symbol, self.symbol(painter))]
 
     for line in transition:
-      c1 = -line[0](0, painter.env)
+      c1 = line[0](0, painter.env)
       c2 = line[1](0, painter.env)
       painter.draw_line(c1, c2)
 

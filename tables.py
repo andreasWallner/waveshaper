@@ -3,13 +3,15 @@ from OffsetCoord import *
 def lsum(l1, l2):
   return (lambda width, env: l1(width, env) + l2(width, env))
  
-def lend(l):
-  return (lambda width, env: OffsetCoord(width * env.bitwidth, 0) + l1(width, env).flipLR())
+def end(l):
+  return (lambda width, env: OffsetCoord(width * env.bitwidth, 0) - l(width, env))
  
-def lleft(l):
-  return (lambda width, env: l(width, env).flipLR())
+def left(l):
+  """ returns lambda that calculates point left of a transition center"""
+  return (lambda width, env: -l(width, env))
  
-def lright(l):
+def right(l):
+  """ returns lambda that calculates point right of transition center"""
   return (lambda width, env: l(width, env))
 
 def combinate(d1, d2):
@@ -37,20 +39,20 @@ locals().update({'a_' + x : anchors[x] for x in anchors})
 
 symbols = {
   'S' : [],
-  'L' : [(a_sb, a_sb)],
-  'H' : [(a_sa, a_sa)],
-  'U' : [(a_sb, a_sb), (a_sa, a_sa)],
+  'L' : [(a_sb, end(a_sb))],
+  'H' : [(a_sa, end(a_sa))],
+  'U' : [(a_sb, end(a_sb)), (a_sa, end(a_sa))],
 }
 
 transitions = {
-  ('S', 'L') : [(a_eb, a_sb)],
-  ('S', 'H') : [(a_ea, a_sa)],
-  ('L', 'S') : [(a_sb, a_eb)],
-  ('H', 'S') : [(a_sa, a_ea)],
-  ('L', 'H') : [(a_sb, a_sa)],
-  ('L', 'L') : [(a_sb, a_sb)],
-  ('H', 'H') : [(a_sa, a_sa)],
-  ('H', 'L') : [(a_sa, a_sb)],
+  ('S', 'L') : [(left(a_eb), right(a_sb))],
+  ('S', 'H') : [(left(a_ea), right(a_sa))],
+  ('L', 'S') : [(left(a_sb), right(a_eb))],
+  ('H', 'S') : [(left(a_sa), right(a_ea))],
+  ('L', 'H') : [(left(a_sb), right(a_sa))],
+  ('L', 'L') : [(left(a_sb), right(a_sb))],
+  ('H', 'H') : [(left(a_sa), right(a_sa))],
+  ('H', 'L') : [(left(a_sa), right(a_sb))],
 }
 
 backgrounds = {
