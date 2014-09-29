@@ -4,13 +4,8 @@ from Painter import *
 from bit import *
 from MatplotlibSurface import *
 
-i = [
-    Instruction('L', 1),
-    Instruction('H', 1),
-    Instruction('H', 1),
-    Instruction('L', 1),
-    Instruction('H', 1),
-]
+s = 'LHLHLH'
+i = [Instruction(c, 1) for c in s] + [Instruction('D', 2, 'A'), Instruction('S', 1)]
 
 s = MatplotlibSurface()
 p = Painter(s)

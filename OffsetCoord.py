@@ -36,3 +36,5 @@ class OffsetCoord(object):
     def flip(self):
         return OffsetCoord(-self.x, -self.y)
 
+    def tuple(self):
+        return (self.x, self.y)
