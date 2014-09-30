@@ -1,10 +1,9 @@
 #!/usr/bin/python
 
-from OffsetCoord import *
-from tables import *
-from MatplotlibSurface import *
-from utils import Trace
-
+from .OffsetCoord import *
+from .tables import *
+from .MatplotlibSurface import *
+from .utils import Trace
 
 class Instruction(object):
   def __init__(self, icode, width, text = None):

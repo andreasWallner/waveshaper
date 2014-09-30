@@ -1,4 +1,4 @@
-from utils import Trace
+from .utils import Trace
 
 class OffsetCoord(object):
     def __init__(self, c, y = None):

@@ -1,4 +1,4 @@
-from OffsetCoord import *
+from .OffsetCoord import *
 
 def lsum(l1, l2):
   return (lambda width, env: l1(width, env) + l2(width, env))

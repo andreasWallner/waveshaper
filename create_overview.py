@@ -1,11 +1,11 @@
 #!/usr/bin/python
 import sys
-import tables
-import Painter
+import waveshaper.tables as tables
+import waveshaper.Painter as Painter
 import io
 import base64
-from MatplotlibSurface import MatplotlibSurface
-from bit import Instruction
+from waveshaper.MatplotlibSurface import MatplotlibSurface
+from waveshaper.bit import Instruction
 
 def plot_symbol(sym):
   s = MatplotlibSurface()

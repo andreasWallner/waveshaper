@@ -1,5 +1,5 @@
-from OffsetCoord import *
-from tables import *
+from .OffsetCoord import *
+from .tables import *
 
 class Env(object):
     def __init__(self):
