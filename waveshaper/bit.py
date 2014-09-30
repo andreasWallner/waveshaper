@@ -12,7 +12,7 @@ class Instruction(object):
     self.text = text
 
   def __repr__(self):
-    return 'Instruction({0!r}, {1})'.format(self.icode, self.width)
+    return 'Instruction({0!r}, {1}, {2!r})'.format(self.icode, self.width, self.text)
 
   def symbol(self, painter):
     try:
@@ -25,6 +25,9 @@ class Instruction(object):
 
   def end(self, painter):
     return (self.width * painter.env.bitwidth, 0)
+
+  def execute(self, painter):
+    self.render(painter)
 
   def render(self, painter):
     if painter.last_symbol is not None:
@@ -39,11 +42,12 @@ class Instruction(object):
   def render_symbol(self, painter):
     s = self.symbol(painter)
     
-    lines = symbols[s]
-    for line in lines:
-      c1 = line[0](self.width, painter.env)
-      c2 = line[1](self.width, painter.env)
-      painter.draw_line(c1, c2)
+    paths = symbols[s]
+    for verts in paths:
+      for v1, v2 in zip(verts[:-1], verts[1:]):
+        c1 = v1(self.width, painter.env)
+        c2 = v2(self.width, painter.env)
+        painter.draw_line(c1, c2)
 
   def render_symbol_bg(self, painter):
     try:
@@ -61,21 +65,21 @@ class Instruction(object):
       return
 
     painter.draw_text(self.text, anchors['cc'](self.width, painter.env))
-      
+
   def render_transition(self, painter):
-    transition = None
+    paths = []
     try:
-      transition = transitions[(painter.last_symbol, self.symbol(painter))]
+      paths = transitions[(painter.last_symbol, self.symbol(painter))]
     except KeyError:
       mirrored = transitions[(self.symbol(painter), painter.last_symbol)]
-      transition = []
-      for line in mirrored:
-        transition.append((left(line[0]), left(line[1])))
+      for lines in mirrored:
+        paths.append([mirror(v) for v in lines])
 
-    for line in transition:
-      c1 = line[0](0, painter.env)
-      c2 = line[1](0, painter.env)
-      painter.draw_line(c1, c2)
+    for verts in paths:
+      for v1, v2 in zip(verts[:-1], verts[1:]):
+        c1 = v1(self.width, painter.env)
+        c2 = v2(self.width, painter.env)
+        painter.draw_line(c1, c2)
 
   def render_transition_bg(self, painter):
     try:
@@ -85,7 +89,7 @@ class Instruction(object):
         mirrored = transition_backgrounds[(self.symbol(painter), painter.last_symbol)]
         polygons = []
         for polygon in mirrored:
-          vertices = [left(v) for v in polygon]
+          vertices = [mirror(v) for v in polygon]
           polygons.append(vertices)
 
       for polygon in polygons:

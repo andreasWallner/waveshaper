@@ -19,7 +19,7 @@ Grammar
     O{LH}{HL}
     LH{[grey]HLHLHL}
 
-    symbol -> 'L' | 'H' | 'U' | 'D' | 'C' | 'T' | 'X' | 'S'
+    symbol -> 'a' - 'z' | 'A' - 'Z'
     
 
 TODO
