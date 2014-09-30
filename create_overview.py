@@ -43,7 +43,7 @@ def plot_transition(sym1, sym2):
   try:
     p.paint_sequence(i)
   except KeyError:
-    pass
+    s.ax.plot([0, 2], [.6, -.6], linewidth=.2, color='red')
 
   s.ax.plot([0, 2], [.5, .5], linewidth=.2, color='grey')
   s.ax.plot([0, 2], [-.5, -.5], linewidth=.2, color='grey')

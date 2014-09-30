@@ -8,3 +8,24 @@ This is a simple way to play around with architecture before implementing the th
 a stricter language.
 
 It draws huge inspiration (wave shapes, drawing methodology) from the tikz-timing package by Martin Scharrer.
+
+Grammar
+-------
+
+    LHLHLHLHL
+    2L2H
+    2{LH}
+    D{0xAA}
+    O{LH}{HL}
+    LH{[grey]HLHLHL}
+
+    symbol -> 'L' | 'H' | 'U' | 'D' | 'C' | 'T' | 'X' | 'S'
+    
+
+TODO
+----
+
+* much that is not on this list
+* metastable symbol?
+* pattern for X
+* weak H/L symbols?

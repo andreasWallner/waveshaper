@@ -63,7 +63,14 @@ class Instruction(object):
     painter.draw_text(self.text, anchors['cc'](self.width, painter.env))
       
   def render_transition(self, painter):
-    transition = transitions[(painter.last_symbol, self.symbol(painter))]
+    transition = None
+    try:
+      transition = transitions[(painter.last_symbol, self.symbol(painter))]
+    except KeyError:
+      mirrored = transitions[(self.symbol(painter), painter.last_symbol)]
+      transition = []
+      for line in mirrored:
+        transition.append((left(line[0]), left(line[1])))
 
     for line in transition:
       c1 = line[0](0, painter.env)
@@ -72,7 +79,14 @@ class Instruction(object):
 
   def render_transition_bg(self, painter):
     try:
-      polygons = transition_backgrounds[(painter.last_symbol), self.symbol(painter)]
+      try:
+        polygons = transition_backgrounds[(painter.last_symbol), self.symbol(painter)]
+      except KeyError:
+        mirrored = transition_backgrounds[(self.symbol(painter), painter.last_symbol)]
+        polygons = []
+        for polygon in mirrored:
+          vertices = [left(v) for v in polygon]
+          polygons.append(vertices)
 
       for polygon in polygons:
         vertices = [v(self.width, painter.env) for v in polygon]
