@@ -13,7 +13,7 @@ class Painter(object):
     def __init__(self, surface):
         self.surface = surface
         self.pos = OffsetCoord(0,0)
-        self.last_symbol = 'S'
+        self.last_symbol = None
         self.env = Env()
     
     def draw_line(self, c1, c2):

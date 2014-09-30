@@ -28,8 +28,9 @@ class Instruction(object):
     return (self.width * painter.env.bitwidth, 0)
 
   def render(self, painter):
-    self.render_transition(painter)
-    self.render_transition_bg(painter)
+    if painter.last_symbol is not None:
+      self.render_transition(painter)
+      self.render_transition_bg(painter)
 
     if self.width != 0:
       self.render_symbol(painter)

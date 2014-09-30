@@ -6,6 +6,10 @@ class MatplotlibSurface(object):
     def __init__(self):
         self.fig = plt.figure()
         self.ax = self.fig.add_subplot(111, aspect='equal')
+        self.ax.set_axis_off()
+
+    def __del__(self):
+        plt.close(self.fig)
 
     def draw_line(self, c1, c2, linewidth):
         self.ax.plot(
