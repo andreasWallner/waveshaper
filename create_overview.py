@@ -14,6 +14,7 @@ def plot_symbol(sym):
 
   i = Instruction(sym, 1)
   i.render_symbol(p)
+  i.render_symbol_bg(p)
 
   s.ax.plot([0, 1], [.5, .5], linewidth=.2, color='grey')
   s.ax.plot([0, 1], [-.5, -.5], linewidth=.2, color='grey')
@@ -64,18 +65,19 @@ def plot_transition(sym1, sym2):
 def plot_symbols(f):
   print('<table>', file=f)
 
+  print('<tr>', file=f)
+  for sym in sorted(tables.symbols.keys()):
+    print('<td style="text-align:center">{0}</td>'.format(sym), file=f)
+
+  print('</tr><tr>', file=f)
+
   for sym in sorted(tables.symbols.keys()):
     imgdata = plot_symbol(sym)
 
-    tr = '''
-      <tr>
-        <td>{name}</td>
-        <td><img src="data:image/png;base64,{img}"</img></td>
-      </tr>'''.format(
-      name = sym,
-      img = imgdata)
-    
+    tr = '<td><img src="data:image/png;base64,{img}"</img></td>'.format(img = imgdata)
     print(tr, file=f)
+
+  print('</tr>', file=f)
 
   print('</table>', file=f)
 
@@ -84,7 +86,7 @@ def plot_transitions(f):
 
   print('<tr><td></td>', file=f)
   for sym in sorted(tables.symbols.keys()):
-    print('<td>{0}</td>'.format(sym), file=f)
+    print('<td style="text-align:center">{0}</td>'.format(sym), file=f)
   print('</tr>', file=f)
 
   for sym1 in sorted(tables.symbols.keys()):
@@ -106,6 +108,7 @@ def main():
   with open('overview.html', mode='w') as f:
     print('<html><body>', file=f)
     plot_symbols(f)
+    print('<br /><br />', file=f)
     plot_transitions(f)
     print('</body></html>', file=f)
 
