@@ -9,8 +9,15 @@ a stricter language.
 
 It draws huge inspiration (wave shapes, drawing methodology) from the tikz-timing package by Martin Scharrer.
 
+Executables
+===========
+
+* test.py: just there to play around
+* create\_overview.py: creates overview.html which contains all symbols and
+  transitions
+
 Grammar
--------
+=======
 
     LHLHLHLHL
     2L2H
@@ -31,7 +38,7 @@ Grammar
     sequence ::= float? '{' instruction+ '}' | instruction+
 
 TODO
-----
+====
 
 * much that is not on this list
 * metastable symbol?
