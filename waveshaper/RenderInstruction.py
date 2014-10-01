@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 from .OffsetCoord import *
 from .tables import *
 from .MatplotlibSurface import *
@@ -26,6 +24,8 @@ class RenderInstruction(object):
 
   def execute(self, painter):
     self.render(painter)
+    painter.pos += self.end(painter)
+    painter.last_symbol = self.symbol(painter)
 
   def render(self, painter):
     if painter.last_symbol is not None:

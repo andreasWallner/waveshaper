@@ -6,6 +6,7 @@ import io
 import base64
 from waveshaper.MatplotlibSurface import MatplotlibSurface
 from waveshaper.RenderInstruction import RenderInstruction
+from waveshaper.InstructionSequence import InstructionSequence
 
 def plot_symbol(sym):
   s = MatplotlibSurface()
@@ -40,9 +41,10 @@ def plot_transition(sym1, sym2):
     RenderInstruction(sym1, 1),
     RenderInstruction(sym2, 1),
     ]
+  seq = InstructionSequence(i)
 
   try:
-    p.paint_sequence(i)
+    seq.execute(p)
   except KeyError:
     s.ax.plot([0, 2], [.6, -.6], linewidth=.2, color='red')
 

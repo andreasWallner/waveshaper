@@ -25,9 +25,3 @@ class Painter(object):
 
     def draw_text(self, text, position):
         self.surface.draw_text(text, position + self.pos)
-
-    def paint_sequence(self, seq):
-        for instr in seq:
-            instr.render(self)
-            self.pos += instr.end(self)
-            self.last_symbol = instr.symbol(self)
