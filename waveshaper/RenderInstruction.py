@@ -5,23 +5,21 @@ from .tables import *
 from .MatplotlibSurface import *
 from .utils import Trace
 
-class Instruction(object):
+class RenderInstruction(object):
   def __init__(self, icode, width, text = None):
     self.width = width
     self.icode = icode
     self.text = text
 
   def __repr__(self):
-    return 'Instruction({0!r}, {1}, {2!r})'.format(self.icode, self.width, self.text)
+    return 'RenderInstruction({0!r}, {1}, {2!r})'.format(self.icode, self.width, self.text)
 
   def symbol(self, painter):
     try:
       table = follow_symbol[self.icode]
       return table[painter.last_symbol]
     except KeyError:
-      pass
-
-    return self.icode
+      return self.icode
 
   def end(self, painter):
     return (self.width * painter.env.bitwidth, 0)

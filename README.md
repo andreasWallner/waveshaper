@@ -15,12 +15,20 @@ Grammar
     LHLHLHLHL
     2L2H
     2{LH}
-    D{0xAA}
-    O{LH}{HL}
+    D(0xAA)
+    O(LH,HL)
     LH{[grey]HLHLHL}
 
-    symbol -> 'a' - 'z' | 'A' - 'Z'
-    
+    symbol ::= [a-zA-Z]
+    identifier ::= [a-zA-Z_]+
+    value ::= identifier
+    string ::= '"' [^"]+ '"' | [a-zA-Z0-9]+
+    number ::= [0-9]+
+    float ::= number ('.' number)? | '.' number
+    parameter ::= '{' sequence '}' | string
+    instruction ::=   float? symbol ( '(' parameter ( ',' parameter )? ')')? 
+                    | '[' ( indentifier '=' )? value ']'
+    sequence ::= float? '{' instruction+ '}' | instruction+
 
 TODO
 ----

@@ -76,7 +76,7 @@ transitions = {
   ('S', 'Z') : [[left(a_ec), right(a_sc)]],
   ('S', 'X') : [[left(a_ec), right(a_sc)]],
   ('S', 'U') : [[left(a_eb), right(a_sb)], [left(a_ea), right(a_sa)]],
-  ('S', 'D') : [[left(a_ec), right(a_sb)], [left(a_ec), right(a_sa)]],
+  ('S', 'D') : [[right(a_sb), right(a_ec), right(a_sa)]],
   ('S', 'CL') : [[left(a_eb), right(a_sb)]],
   ('S', 'CH') : [[left(a_ea), right(a_sa)]],
 

@@ -1,11 +1,11 @@
 #!/usr/bin/python
 
 from waveshaper.Painter import *
-from waveshaper.bit import *
+from waveshaper.RenderInstruction import *
 from waveshaper.MatplotlibSurface import *
 
 s = 'HD'
-i = [Instruction(c, 1) for c in s]
+i = [RenderInstruction(c, 1) for c in s]
 
 s = MatplotlibSurface()
 p = Painter(s)

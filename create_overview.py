@@ -5,14 +5,14 @@ import waveshaper.Painter as Painter
 import io
 import base64
 from waveshaper.MatplotlibSurface import MatplotlibSurface
-from waveshaper.bit import Instruction
+from waveshaper.RenderInstruction import RenderInstruction
 
 def plot_symbol(sym):
   s = MatplotlibSurface()
   env = Painter.Env()
   p = Painter.Painter(s)
 
-  i = Instruction(sym, 1)
+  i = RenderInstruction(sym, 1)
   i.render_symbol(p)
   i.render_symbol_bg(p)
 
@@ -37,8 +37,8 @@ def plot_transition(sym1, sym2):
   p = Painter.Painter(s)
 
   i = [
-    Instruction(sym1, 1),
-    Instruction(sym2, 1),
+    RenderInstruction(sym1, 1),
+    RenderInstruction(sym2, 1),
     ]
 
   try:
