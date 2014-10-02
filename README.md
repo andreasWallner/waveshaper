@@ -30,12 +30,13 @@ Grammar
     identifier ::= [a-zA-Z_]+
     value ::= identifier
     string ::= '"' [^"]+ '"' | [a-zA-Z0-9]+
-    number ::= [0-9]+
+    natural ::= [0-9]+
     float ::= number ('.' number)? | '.' number
     parameter ::= '{' sequence '}' | string
-    instruction ::=   float? symbol ( '(' parameter ( ',' parameter )? ')')? 
+    parameters ::= parameter ( "," parameter )*
+    instruction ::=   float? symbol ( '(' parameters ')')? 
                     | '[' ( indentifier '=' )? value ']'
-    sequence ::= float? '{' instruction+ '}' | instruction+
+    sequence ::= number? '{' instruction+ '}' | instruction+
 
 TODO
 ====
