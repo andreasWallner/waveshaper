@@ -6,7 +6,7 @@ class InstructionSequence(object):
     self.count = count
 
   def __repr__(self):
-    return 'InstructionSequence({0!r})'.format(self.instr)
+    return 'InstructionSequence({0!r}, {1})'.format(self.instr, self.count)
 
   def __eq__(self, other):
     if isinstance(other, self.__class__):
