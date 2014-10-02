@@ -1,7 +1,7 @@
-from .OffsetCoord import *
-from .tables import *
-from .MatplotlibSurface import *
-from .utils import Trace
+from OffsetCoord import *
+from tables import *
+from MatplotlibSurface import *
+from utils import Trace
 
 class RenderInstruction(object):
   def __init__(self, icode, width, text = None):
@@ -11,6 +11,17 @@ class RenderInstruction(object):
 
   def __repr__(self):
     return 'RenderInstruction({0!r}, {1}, {2!r})'.format(self.icode, self.width, self.text)
+
+  def __eq__(self, other):
+    if isinstance(other, self.__class__):
+      return hasattr(other, '__dict__') and self.__dict__ == other.__dict__
+    return NotImplemented
+
+  def __ne__(self, other):
+    return not self.__eq__(other)
+
+  def __hash__(self):
+    return hash(tuple(sorted(self.__dict__.items())))
 
   def symbol(self, painter):
     try:
