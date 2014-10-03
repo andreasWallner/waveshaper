@@ -9,7 +9,7 @@ class BasicTests(unittest.TestCase):
   def test_minimal(self):
     self.assertEqual(
       Wave().eval('L'),
-      InstructionSequence([RenderInstruction('L', 1)], 1))
+      InstructionSequence([RenderInstruction('L')], 1))
 
   def test_width(self):
     self.assertEqual(
@@ -29,7 +29,7 @@ class BasicTests(unittest.TestCase):
   def test_multiple_instr(self):
     self.assertEqual(
       Wave().eval('LLL'),
-      InstructionSequence(3*[RenderInstruction('L', 1)], 1))
+      InstructionSequence(3*[RenderInstruction('L')], 1))
 
   def test_ec_instruction(self):
     self.assertEqual(
@@ -45,12 +45,12 @@ class SequenceTests(unittest.TestCase):
   def test_explicit(self):
     self.assertEqual(
       Wave().eval('{LLL}'),
-      InstructionSequence(3*[RenderInstruction('L', 1)], 1))
+      InstructionSequence(3*[RenderInstruction('L')], 1))
 
   def test_mutiple(self):
     self.assertEqual(
       Wave().eval('4{LLL}'),
-      InstructionSequence(3*[RenderInstruction('L', 1)], 4))
+      InstructionSequence(3*[RenderInstruction('L')], 4))
 
   def test_mixed(self):
     self.assertEqual(
@@ -60,12 +60,12 @@ class SequenceTests(unittest.TestCase):
   def test_sequence_param(self):
     self.assertEqual(
       Wave().eval('B({LL})'),
-      InstructionSequence([BackgroundInstruction(InstructionSequence(2*[RenderInstruction('L', 1)]))]))
+      InstructionSequence([BackgroundInstruction(InstructionSequence(2*[RenderInstruction('L')]))]))
 
   def test_nested(self):
     self.assertEqual(
       Wave().eval('{2{L}2{H}}'),
-      InstructionSequence([InstructionSequence([RenderInstruction('L', 1)], 2), InstructionSequence([RenderInstruction('H', 1)], 2)], 1))
+      InstructionSequence([InstructionSequence([RenderInstruction('L')], 2), InstructionSequence([RenderInstruction('H')], 2)], 1))
 
   def test_nested_mixed(self):
     self.assertEqual(
@@ -75,7 +75,7 @@ class SequenceTests(unittest.TestCase):
   def test_nested_optimizable(self):
     self.assertEqual(
       Wave().eval('{5{L}}'),
-      InstructionSequence([RenderInstruction('L', 1)], 5))
+      InstructionSequence([RenderInstruction('L')], 5))
 
   def test_nested_optimizable_calc(self):
     self.assertEqual(
@@ -86,15 +86,15 @@ class SequenceTests(unittest.TestCase):
     self.assertEqual(
       Wave().eval('LH4LB({[grey]H0L})LL(0)'),
       InstructionSequence([
-        RenderInstruction('L', 1),
-        RenderInstruction('H', 1),
+        RenderInstruction('L'),
+        RenderInstruction('H'),
         RenderInstruction('L', 4),
         BackgroundInstruction(
           InstructionSequence([
             EnvironmentChangeInstruction('color', 'grey'),
-            RenderInstruction('H', 1),
+            RenderInstruction('H'),
             RenderInstruction('L', 0)])),
-        RenderInstruction('L', 1),
+        RenderInstruction('L'),
         RenderInstruction('L', 1, '0') ]))
 
 class RuleTests(unittest.TestCase):
