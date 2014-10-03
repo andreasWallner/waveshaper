@@ -133,13 +133,13 @@ transitions = {
 }
 
 transition_backgrounds = {
-  ('U', 'S') : [(left(a_sb), a_eb, a_ea, left(a_sa))],
-  ('U', 'L') : [(a_ec, left(a_sa), left(a_sb))],
-  ('U', 'H') : [(a_ec, left(a_sa), left(a_sb))],  
-  ('U', 'Z') : [(a_ec, left(a_sa), left(a_sb))],
-  ('U', 'X') : [(a_ec, left(a_sa), left(a_sb))],  
-  ('U', 'U') : [(left(a_sa), a_sa, a_sb, left(a_sb))],
-  ('U', 'D') : [(a_ec, left(a_sa), left(a_sb))],  
-  ('U', 'CH') : [(a_ec, left(a_sa), left(a_sb))],  
-  ('U', 'CL') : [(a_ec, left(a_sa), left(a_sb))],
+  ('U', 'S') : [[left(a_sb), a_eb, a_ea, left(a_sa)]],
+  ('U', 'L') : [[a_ec, left(a_sa), left(a_sb)]],
+  ('U', 'H') : [[a_ec, left(a_sa), left(a_sb)]],  
+  ('U', 'Z') : [[a_ec, left(a_sa), left(a_sb)]],
+  ('U', 'X') : [[a_ec, left(a_sa), left(a_sb)]],  
+  ('U', 'U') : [[left(a_sa), a_sa, a_sb, left(a_sb)]],
+  ('U', 'D') : [[a_ec, left(a_sa), left(a_sb)]],  
+  ('U', 'CH') : [[a_ec, left(a_sa), left(a_sb)]],  
+  ('U', 'CL') : [[a_ec, left(a_sa), left(a_sb)]],
 }
