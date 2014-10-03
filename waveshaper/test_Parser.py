@@ -66,7 +66,12 @@ class tests(unittest.TestCase):
       Wave().eval('{5{L}}'),
       InstructionSequence([RenderInstruction('L', 1)], 5))
 
-  '''def test_complete(self):
+  def test_sequence_instruction_mixed(self):
+    self.assertEqual(
+      Wave().eval('L5{H}L'),
+      InstructionSequence([RenderInstruction('L'), InstructionSequence([RenderInstruction('H')], 5), RenderInstruction('L')], 1))
+
+  def test_complete(self):
     self.assertEqual(
       Wave().eval('LH4LB({[grey]H0L})LL(0)'),
       InstructionSequence([
@@ -79,7 +84,7 @@ class tests(unittest.TestCase):
             RenderInstruction('H', 1),
             RenderInstruction('L', 0)])),
         RenderInstruction('L', 1),
-        RenderInstruction('L', 1, '0') ]))'''
+        RenderInstruction('L', 1, '0') ]))
 
   def test_identifier(self):
     self.assertEqual(

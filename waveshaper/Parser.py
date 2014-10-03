@@ -44,7 +44,7 @@ class Wave(object):
     count, _, seq, _ = children
 
     count = 1 if not count else count[0]
-    if len(seq) == 1:
+    if len(seq) == 1 and isinstance(seq[0], InstructionSequence):
       seq[0].count = seq[0].count * count
       return seq[0]
     else:
@@ -52,11 +52,18 @@ class Wave(object):
 
   def instructions(self, node, children):
     'instructions = instruction+'
-    return InstructionSequence(children, 1)
+    if len(children) == 1:
+      return children[0]
+    else:
+      return InstructionSequence(children, 1)
 
   def sequence(self, node, children):
-    'sequence = sequence_group / instructions'
-    return children[0]
+    'sequence = ( sequence_group / instructions )+'
+    if len(children) == 1 and isinstance(children[0][0], InstructionSequence):
+      return children[0][0]
+    else:
+      seq = [x[0] for x in children]
+      return InstructionSequence(seq, 1)
 
   def parameter(self, node, children):
     'parameter = string / ( sequence )'
