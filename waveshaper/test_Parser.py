@@ -5,7 +5,7 @@ from .BackgroundInstruction import BackgroundInstruction
 from .InstructionSequence import InstructionSequence
 from .EnvironmentChangeInstruction import EnvironmentChangeInstruction
 
-class tests(unittest.TestCase):
+class BasicTests(unittest.TestCase):
   def test_minimal(self):
     self.assertEqual(
       Wave().eval('L'),
@@ -31,21 +31,6 @@ class tests(unittest.TestCase):
       Wave().eval('LLL'),
       InstructionSequence(3*[RenderInstruction('L', 1)], 1))
 
-  def test_explicit_sequence(self):
-    self.assertEqual(
-      Wave().eval('{LLL}'),
-      InstructionSequence(3*[RenderInstruction('L', 1)], 1))
-
-  def test_mutiple_sequence(self):
-    self.assertEqual(
-      Wave().eval('4{LLL}'),
-      InstructionSequence(3*[RenderInstruction('L', 1)], 4))
-
-  def test_sequence_param(self):
-    self.assertEqual(
-      Wave().eval('B({LL})'),
-      InstructionSequence([BackgroundInstruction(InstructionSequence(2*[RenderInstruction('L', 1)]))]))
-
   def test_ec_instruction(self):
     self.assertEqual(
       Wave().eval('[foo=bar]'),
@@ -56,20 +41,46 @@ class tests(unittest.TestCase):
       Wave().eval('[bar]'),
       InstructionSequence([EnvironmentChangeInstruction('color', 'bar')]))
 
-  def test_nested_sequence(self):
+class SequenceTests(unittest.TestCase):
+  def test_explicit(self):
+    self.assertEqual(
+      Wave().eval('{LLL}'),
+      InstructionSequence(3*[RenderInstruction('L', 1)], 1))
+
+  def test_mutiple(self):
+    self.assertEqual(
+      Wave().eval('4{LLL}'),
+      InstructionSequence(3*[RenderInstruction('L', 1)], 4))
+
+  def test_mixed(self):
+    self.assertEqual(
+      Wave().eval('L5{H}L'),
+      InstructionSequence([RenderInstruction('L'), InstructionSequence([RenderInstruction('H')], 5), RenderInstruction('L')], 1))
+
+  def test_sequence_param(self):
+    self.assertEqual(
+      Wave().eval('B({LL})'),
+      InstructionSequence([BackgroundInstruction(InstructionSequence(2*[RenderInstruction('L', 1)]))]))
+
+  def test_nested(self):
     self.assertEqual(
       Wave().eval('{2{L}2{H}}'),
       InstructionSequence([InstructionSequence([RenderInstruction('L', 1)], 2), InstructionSequence([RenderInstruction('H', 1)], 2)], 1))
 
-  def test_nested_sequence_optimizable(self):
+  def test_nested_mixed(self):
+    self.assertEqual(
+      Wave().eval('2{2{L}H}'),
+      InstructionSequence([InstructionSequence([RenderInstruction('L')], 2), RenderInstruction('H')], 2))
+
+  def test_nested_optimizable(self):
     self.assertEqual(
       Wave().eval('{5{L}}'),
       InstructionSequence([RenderInstruction('L', 1)], 5))
 
-  def test_sequence_instruction_mixed(self):
+  def test_nested_optimizable_calc(self):
     self.assertEqual(
-      Wave().eval('L5{H}L'),
-      InstructionSequence([RenderInstruction('L'), InstructionSequence([RenderInstruction('H')], 5), RenderInstruction('L')], 1))
+      Wave().eval('2{5{L}}'),
+      InstructionSequence([RenderInstruction('L')], 10))
 
   def test_complete(self):
     self.assertEqual(
@@ -86,6 +97,7 @@ class tests(unittest.TestCase):
         RenderInstruction('L', 1),
         RenderInstruction('L', 1, '0') ]))
 
+class RuleTests(unittest.TestCase):
   def test_identifier(self):
     self.assertEqual(
       Wave().eval('_asdf', 'identifier'),
