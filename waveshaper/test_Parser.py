@@ -6,10 +6,20 @@ from .InstructionSequence import InstructionSequence
 from .EnvironmentChangeInstruction import EnvironmentChangeInstruction
 
 class BasicTests(unittest.TestCase):
-  def test_minimal(self):
+  def test_single_low(self):
     self.assertEqual(
       Wave().eval('L'),
       InstructionSequence([RenderInstruction('L')], 1))
+
+  def test_single_clock(self):
+    self.assertEqual(
+      Wave().eval('C'),
+      InstructionSequence([RenderInstruction('C')], 1))
+
+  def test_lowercase(self):
+    self.assertEqual(
+      Wave().eval('c'),
+      InstructionSequence([RenderInstruction('C', 0.5)], 1))
 
   def test_width(self):
     self.assertEqual(
