@@ -43,5 +43,9 @@ class MatplotlibSurface(object):
             verticalalignment='center',
             )
 
-    def show(self):
-        plt.show()
+    def show(self, block = True):
+        plt.show(block=block)
+
+    def clear(self):
+      self.ax.clear()
+      self.ax.set_axis_off()
