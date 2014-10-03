@@ -4,8 +4,8 @@ from .MatplotlibSurface import *
 from .utils import Trace
 
 class RenderInstruction(object):
-  def __init__(self, icode, width = None, text = None):
-    self.width = 1 if width is None else width
+  def __init__(self, icode, width = 1, text = None):
+    self.width = width
     self.icode = icode
     self.text = text
 
