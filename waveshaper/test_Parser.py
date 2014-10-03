@@ -34,17 +34,17 @@ class tests(unittest.TestCase):
   def test_explicit_sequence(self):
     self.assertEqual(
       Wave().eval('{LLL}'),
-      InstructionSequence(3*[RenderInstruction('L', 1)], 1))
+      InstructionSequence([InstructionSequence(3*[RenderInstruction('L', 1)], 1)], 1))
 
   def test_mutiple_sequence(self):
     self.assertEqual(
       Wave().eval('4{LLL}'),
-      InstructionSequence(3*[RenderInstruction('L', 1)], 4))
+      InstructionSequence([InstructionSequence(3*[RenderInstruction('L', 1)], 1)], 4))
 
   def test_sequence_param(self):
     self.assertEqual(
       Wave().eval('B({LL})'),
-      InstructionSequence([BackgroundInstruction(InstructionSequence(2*[RenderInstruction('L', 1)]))]))
+      InstructionSequence([BackgroundInstruction(InstructionSequence([InstructionSequence(2*[RenderInstruction('L', 1)])]))]))
 
   def test_ec_instruction(self):
     self.assertEqual(
@@ -56,7 +56,16 @@ class tests(unittest.TestCase):
       Wave().eval('[bar]'),
       InstructionSequence([EnvironmentChangeInstruction('color', 'bar')]))
 
-  def test_complete(self):
+  def test_nested_sequence(self):
+    self.assertEqual(
+      Wave().eval('{5{L}}'),
+      InstructionSequence([
+        InstructionSequence([
+          InstructionSequence([
+            RenderInstruction('L', 1)],
+            1)], 5)], 1))
+
+  '''def test_complete(self):
     self.assertEqual(
       Wave().eval('LH4LB({[grey]H0L})LL(0)'),
       InstructionSequence([
@@ -69,7 +78,7 @@ class tests(unittest.TestCase):
             RenderInstruction('H', 1),
             RenderInstruction('L', 0)])),
         RenderInstruction('L', 1),
-        RenderInstruction('L', 1, '0') ]))
+        RenderInstruction('L', 1, '0') ]))'''
 
   def test_identifier(self):
     self.assertEqual(
