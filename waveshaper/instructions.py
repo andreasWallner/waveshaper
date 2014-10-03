@@ -1,6 +1,6 @@
-from RenderInstruction import RenderInstruction
-from BackgroundInstruction import BackgroundInstruction
-from utils import Trace
+from .RenderInstruction import RenderInstruction
+from .BackgroundInstruction import BackgroundInstruction
+from .utils import Trace
 
 def get_instruction(symbol, width = None, parameters = None):
   if width is None:

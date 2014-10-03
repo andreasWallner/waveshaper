@@ -1,8 +1,8 @@
 from parsimonious.grammar import Grammar
-from utils import Trace
-from instructions import get_instruction
-from InstructionSequence import InstructionSequence
-from EnvironmentChangeInstruction import EnvironmentChangeInstruction
+from .utils import Trace
+from .instructions import get_instruction
+from .InstructionSequence import InstructionSequence
+from .EnvironmentChangeInstruction import EnvironmentChangeInstruction
 
 class Wave(object):
   def __init__(self):

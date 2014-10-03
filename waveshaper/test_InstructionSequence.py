@@ -1,6 +1,6 @@
 import unittest
-from InstructionSequence import InstructionSequence
-from utils import RealEqualMixin
+from .InstructionSequence import InstructionSequence
+from .utils import RealEqualMixin
 
 class tests(unittest.TestCase, RealEqualMixin):
   def test_eq(self):

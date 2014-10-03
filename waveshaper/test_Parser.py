@@ -1,9 +1,9 @@
 import unittest
-from Parser import Wave
-from RenderInstruction import RenderInstruction
-from BackgroundInstruction import BackgroundInstruction
-from InstructionSequence import InstructionSequence
-from EnvironmentChangeInstruction import EnvironmentChangeInstruction
+from .Parser import Wave
+from .RenderInstruction import RenderInstruction
+from .BackgroundInstruction import BackgroundInstruction
+from .InstructionSequence import InstructionSequence
+from .EnvironmentChangeInstruction import EnvironmentChangeInstruction
 
 class tests(unittest.TestCase):
   def test_minimal(self):
