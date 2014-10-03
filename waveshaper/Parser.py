@@ -39,15 +39,24 @@ class Wave(object):
     text = node.text if node.text[0] != '"' else node.text[1:-1]
     return text
 
-  def sequence(self, node, children):
-    'sequence = ( natural? "{" sequence "}" ) / instruction+'
-    instr = children[0]
-    if len(instr) < 3 or node.children[0].children[1].text != '{': # just instruction+
-      return InstructionSequence(instr, 1)
+  def sequence_group(self, node, children):
+    'sequence_group = natural? "{" sequence+ "}"'
+    count, _, seq, _ = children
+
+    count = 1 if not count else count[0]
+    if len(seq) == 1:
+      seq[0].count = seq[0].count * count
+      return seq[0]
     else:
-      count, _, seq, _ = instr
-      count = 1 if not count else count[0]
-      return InstructionSequence([seq], count)
+      return InstructionSequence(seq, count)
+
+  def instructions(self, node, children):
+    'instructions = instruction+'
+    return InstructionSequence(children, 1)
+
+  def sequence(self, node, children):
+    'sequence = sequence_group / instructions'
+    return children[0]
 
   def parameter(self, node, children):
     'parameter = string / ( sequence )'
