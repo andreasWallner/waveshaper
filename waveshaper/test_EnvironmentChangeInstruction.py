@@ -25,24 +25,22 @@ class tests(unittest.TestCase, RealEqualMixin):
 
     eci = EnvironmentChangeInstruction(None, 'black')
     eci.execute(dp)
-    self.assertEqual(dp.env.color, 'black')
-    self.assertEqual(dp.env.foo, 0)
+    self.assertEqual(dp.env['color'], 'black')
+    self.assertEqual(dp.env['foo'], 0)
 
     eci = EnvironmentChangeInstruction('foo', 'red')
     eci.execute(dp)
-    self.assertEqual(dp.env.color, 'black')
-    self.assertEqual(dp.env.foo, 'red')
+    self.assertEqual(dp.env['color'], 'black')
+    self.assertEqual(dp.env['foo'], 'red')
 
     eci = EnvironmentChangeInstruction('bar', 'red')
     eci.execute(dp)
-    self.assertEqual(dp.env.color, 'black')
-    self.assertEqual(dp.env.foo, 'red')
-
-class dummyEnv(object):
-  def __init__(self):
-    self.color = None
-    self.foo = 0
+    self.assertEqual(dp.env['color'], 'black')
+    self.assertEqual(dp.env['foo'], 'red')
 
 class dummyPainter(object):
   def __init__(self):
-    self.env = dummyEnv()
+    self.env = {
+      'color' : None,
+      'foo'   : 0,
+    }

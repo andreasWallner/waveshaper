@@ -4,7 +4,7 @@ def lsum(l1, l2):
   return (lambda width, env: l1(width, env) + l2(width, env))
  
 def end(l):
-  return (lambda width, env: OffsetCoord(width * env.bitwidth, 0) - l(width, env))
+  return (lambda width, env: OffsetCoord(width * env['bitwidth'], 0) - l(width, env))
 
 def mirror(l):
   return (lambda width, env: -l(width, env))
@@ -26,19 +26,33 @@ def combinate(d1, d2):
 
 y_offsets = {
   'c' : (lambda width, env: OffsetCoord(0, 0)),
-  'b' : (lambda width, env: OffsetCoord(0, -env.lineheight / 2)),
-  'a' : (lambda width, env: OffsetCoord(0, env.lineheight / 2)),
+  'b' : (lambda width, env: OffsetCoord(0, -env['lineheight'] / 2)),
+  'a' : (lambda width, env: OffsetCoord(0, env['lineheight'] / 2)),
 }
  
 x_offsets = {
   'e' : (lambda width, env: OffsetCoord(0, 0)),
-  's' : (lambda width, env: OffsetCoord(env.lineheight * env.slope, 0)),
-  'm' : (lambda width, env: OffsetCoord(env.lineheight * env.slope / 2, 0)),
-  'c' : (lambda width, env: OffsetCoord(width * env.bitwidth / 2, 0)),
+  's' : (lambda width, env: OffsetCoord(env['lineheight'] * env['slope'], 0)),
+  'm' : (lambda width, env: OffsetCoord(env['lineheight'] * env['slope'] / 2, 0)),
+  'c' : (lambda width, env: OffsetCoord(width * env['bitwidth'] / 2, 0)),
 }
 
 anchors = combinate(x_offsets, y_offsets)
 locals().update({'a_' + x : anchors[x] for x in anchors})
+
+follow_symbol = {
+  'C' : {
+    'CL' : 'CH',
+    'CH' : 'CL',
+    'S' : 'CL',
+    '' : 'CL',
+    },
+  'T' : {
+    'L' : 'H',
+    'H' : 'L',
+    '' : 'L',
+  }
+}
 
 symbols = {
   'S' : [],
@@ -51,22 +65,6 @@ symbols = {
   #'M' : [],
   'CL' : [[a_sb, end(a_sb)]],
   'CH' : [[a_sa, end(a_sa)]],
-}
-
-follow_symbol = {
-  'C' : {
-    'CL' : 'CH',
-    'CH' : 'CL',
-    'S' : 'CL',
-    },
-  'T' : {
-    'L' : 'H',
-    'H' : 'L',
-  }
-}
-
-symbol_backgrounds = {
-  'U' : [[a_sa, end(a_sa), end(a_sb), a_sb]],
 }
 
 transitions = {
@@ -132,7 +130,9 @@ transitions = {
   ('CH', 'CL') : [[left(a_sa), left(a_sb)], [left(a_sb), right(a_sb)]],
 }
 
-transition_backgrounds = {
+backgrounds = {
+  'U' : [[a_sa, end(a_sa), end(a_sb), a_sb]],
+
   ('U', 'S') : [[left(a_sb), a_eb, a_ea, left(a_sa)]],
   ('U', 'L') : [[a_ec, left(a_sa), left(a_sb)]],
   ('U', 'H') : [[a_ec, left(a_sa), left(a_sb)]],  

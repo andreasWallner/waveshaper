@@ -18,5 +18,5 @@ class EnvironmentChangeInstruction(object):
     return not self.__eq__(other)
 
   def execute(self, painter):
-    if hasattr(painter.env, self.envvar):
-      setattr(painter.env, self.envvar, self.value)
+    if self.envvar in painter.env:
+      painter.env[self.envvar] = self.value

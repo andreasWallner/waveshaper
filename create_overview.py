@@ -10,7 +10,6 @@ from waveshaper.InstructionSequence import InstructionSequence
 
 def plot_symbol(sym):
   s = MatplotlibSurface()
-  env = Painter.Env()
   p = Painter.Painter(s)
 
   i = RenderInstruction(sym, 1)
@@ -34,7 +33,6 @@ def plot_symbol(sym):
 
 def plot_transition(sym1, sym2):
   s = MatplotlibSurface()
-  env = Painter.Env()
   p = Painter.Painter(s)
 
   i = [
