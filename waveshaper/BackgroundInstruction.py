@@ -16,12 +16,12 @@ class BackgroundInstruction(object):
     return not self.__eq__(other)
 
   def execute(self, painter):
-    origEnv = copy(painter.env)
-    pos = painter.pos
+    painter.pushEnv()
+    painter.pushPos()
     ls = painter.last_symbol
 
     self.seq.execute(painter)
 
-    painter.env = origEnv
-    painter.pos = pos
     painter.last_symbol = ls
+    painter.popEnv()
+    painter.popPos()

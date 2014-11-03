@@ -38,8 +38,7 @@ class RenderInstruction(object):
 
   def execute(self, painter):
     self.render(painter)
-    painter.pos += self.end(painter)
-    painter.last_symbol = self.symbol(painter)
+    painter.painted(self.end(painter), self.symbol(painter))
 
   def render(self, painter):
     if painter.last_symbol is not None:
@@ -51,60 +50,60 @@ class RenderInstruction(object):
       self.render_symbol_bg(painter)
       self.render_symbol_text(painter)
 
-  def render_paths(self, paths, painter):
-    for verts in paths:
-      coords = [x(self.width, painter.env) for x in verts]
-      for c1, c2 in zip(coords[:-1], coords[1:]):
-        painter.draw_line(c1, c2)
+  def render_path(self, vertices, painter, env = 'c'):
+    if env == 'c':
+      env = painter.env
+    else:
+      env = painter.env['last']
 
-  def render_polygons(self, polygons, painter):
-    for polygon in polygons:
-      vertices = [v(self.width, painter.env) for v in polygon]
-      painter.draw_fill(vertices)
+    coords = [x(self.width, env) for x in vertices]
+    for c1, c2 in zip(coords[:-1], coords[1:]):
+      painter.draw_line(c1, c2, env)
+
+  def render_polygon(self, vertices, painter, env = 'c'):
+    if env == 'c':
+      env = painter.env
+    else:
+      env = painter.env['last']
+
+    vertices = [v(self.width, env) for v in vertices]
+    painter.draw_fill(vertices)
 
   def render_symbol(self, painter):
     s = self.symbol(painter)
     
     paths = symbols[s]
-    for path in paths:
-      self.render_paths(paths, painter)
+    for vertices in paths:
+      self.render_path(vertices, painter)
 
   def render_symbol_bg(self, painter):
     s = self.symbol(painter)
-    if s in backgrounds:
-      polygons = backgrounds[s]
-      self.render_polygons(polygons, painter)
+    if s not in backgrounds:
+      return
+
+    polygons = backgrounds[s]
+    for polygon in polygons:
+      vertices, env = polygon
+      self.render_polygon(vertices, painter, env)
 
   def render_symbol_text(self, painter):
     if self.text is not None:
       painter.draw_text(self.text, anchors['cc'](self.width, painter.env))
-
+  
   def render_transition(self, painter):
-    paths = []
-    try:
-      paths = transitions[(painter.last_symbol, self.symbol(painter))]
-    except KeyError:
-      mirrored = transitions[(self.symbol(painter), painter.last_symbol)]
-      for lines in mirrored:
-        paths.append([mirror(v) for v in lines])
-
-    self.render_paths(paths, painter)
+    paths = transitions[(painter.last_symbol, self.symbol(painter))]
+    
+    for path in paths:
+      vertices, env = path
+      self.render_path(vertices, painter, env)
 
   def render_transition_bg(self, painter):
-    polygons = []
-    try:
-      polygons = backgrounds[(painter.last_symbol), self.symbol(painter)]
-    except KeyError:
-      try:
-        mirrored = backgrounds[(self.symbol(painter), painter.last_symbol)]
-        polygons = []
-        for polygon in mirrored:
-          vertices = [mirror(v) for v in polygon]
-          polygons.append(vertices)
-      except KeyError:
-        pass
-
+    idx = (painter.last_symbol, self.symbol(painter))
+    if idx not in backgrounds:
+      return
+    polygons = backgrounds[(painter.last_symbol), self.symbol(painter)]
+    
     for polygon in polygons:
-      vertices = [v(self.width, painter.env) for v in polygon]
-      painter.draw_fill(vertices)
+      vertices, env = polygon
+      self.render_polygon(vertices, painter, env)
 

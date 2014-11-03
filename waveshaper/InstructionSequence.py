@@ -1,5 +1,4 @@
 from copy import copy
-
 class InstructionSequence(object):
   def __init__(self, instructions, count = 1):
     self.instr = instructions
@@ -17,10 +16,10 @@ class InstructionSequence(object):
     return not self.__eq__(other)
 
   def execute(self, painter):
-    oldEnv = copy(painter.env)
+    painter.pushEnv()
 
     for n in range(self.count):
       for i in self.instr:
         i.execute(painter)
 
-    painter.env = oldEnv
+    painter.popEnv()

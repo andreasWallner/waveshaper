@@ -11,13 +11,13 @@ class MatplotlibSurface(object):
     def __del__(self):
         plt.close(self.fig)
 
-    def draw_line(self, c1, c2, linewidth):
+    def draw_line(self, c1, c2, color, linewidth):
         self.ax.plot(
             (c1.x, c2.x),
             (c1.y, c2.y),
             linewidth=linewidth,
             solid_capstyle='round',
-            color='black')
+            color=color)
 
     def draw_fill(self, vertices, color, linewidth):
         # convert OffsetCoord to tuples, add one last for CLOSEPOLY, value does not
