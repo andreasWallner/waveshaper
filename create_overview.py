@@ -1,4 +1,9 @@
 #!/usr/bin/python
+
+# make it possible to run script on shell without X
+import matplotlib as mpl
+mpl.use('Agg')
+
 import sys
 import waveshaper.tables as tables
 import waveshaper.Painter as Painter
@@ -7,6 +12,7 @@ import base64
 from waveshaper.MatplotlibSurface import MatplotlibSurface
 from waveshaper.RenderInstruction import RenderInstruction
 from waveshaper.InstructionSequence import InstructionSequence
+from waveshaper.EnvironmentChangeInstruction import EnvironmentChangeInstruction
 
 def plot_symbol(sym):
   s = MatplotlibSurface()
@@ -36,7 +42,9 @@ def plot_transition(sym1, sym2):
   p = Painter.Painter(s)
 
   i = [
+    EnvironmentChangeInstruction('color', 'red'),
     RenderInstruction(sym1, 1),
+    EnvironmentChangeInstruction('color', 'green'),
     RenderInstruction(sym2, 1),
     ]
   seq = InstructionSequence(i)
@@ -44,6 +52,7 @@ def plot_transition(sym1, sym2):
   try:
     seq.execute(p)
   except KeyError:
+    raise
     s.ax.plot([0, 2], [.6, -.6], linewidth=.2, color='red')
 
   s.ax.plot([0, 2], [.5, .5], linewidth=.2, color='grey')
