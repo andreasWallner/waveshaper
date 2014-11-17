@@ -51,23 +51,13 @@ class RenderInstruction(object):
       self.render_symbol_text(painter)
 
   def render_path(self, vertices, painter, env = 'c'):
-    if env == 'c':
-      env = painter.env
-    else:
-      env = painter.env['last']
-
-    coords = [x(self.width, env) for x in vertices]
+    coords = [x(self.width, painter.get_env(env)) for x in vertices]
     for c1, c2 in zip(coords[:-1], coords[1:]):
       painter.draw_line(c1, c2, env)
 
   def render_polygon(self, vertices, painter, env = 'c'):
-    if env == 'c':
-      env = painter.env
-    else:
-      env = painter.env['last']
-
-    vertices = [v(self.width, env) for v in vertices]
-    painter.draw_fill(vertices)
+    vertices = [v(self.width, painter.get_env(env)) for v in vertices]
+    painter.draw_fill(vertices, env)
 
   def render_symbol(self, painter):
     s = self.symbol(painter)

@@ -20,23 +20,29 @@ class Painter(object):
         self._posStack = []
         self._envStack = []
 
-    def painted(self, width, symbol):
-      del self.env['last']
-      self.env['last'] = copy(self.env)
+    def get_env(self, env):
+        if env == 'c':
+            return self.env
+        elif env == 'l':
+            return self.env['last']
+        else:
+            raise Exception('invalid environment')
 
-      self.last_symbol = symbol
-      self.pos += width
+    def painted(self, width, symbol):
+        del self.env['last']
+        self.env['last'] = copy(self.env)
+
+        self.last_symbol = symbol
+        self.pos += width
     
     def draw_line(self, c1, c2, env = 'c'):
-        usedEnv = self.env
-        if env == 'l':
-          usedEnv = self.env['last']
+        env = self.get_env(env)
+        self.surface.draw_line(self.pos + c1, self.pos + c2, env['color'], env['linewidth'])
 
-        self.surface.draw_line(self.pos + c1, self.pos + c2, self.env['color'], self.env['linewidth'])
-
-    def draw_fill(self, vertices):
+    def draw_fill(self, vertices, env = 'c'):
+        env = self.get_env(env)
         vertices = [v + self.pos for v in vertices]
-        self.surface.draw_fill(vertices, self.env['fillcolor'], self.env['linewidth'])
+        self.surface.draw_fill(vertices, env['fillcolor'], env['linewidth'])
 
     def draw_text(self, text, position):
         self.surface.draw_text(text, position + self.pos)
