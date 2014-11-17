@@ -2,23 +2,33 @@ from .OffsetCoord import *
 
 def lsum(l1, l2):
   ''' build sum of two OffsetCoords'''
-  return (lambda width, env: l1(width, env) + l2(width, env))
+  def lsum(width, env):
+    return l1(width, env) + l2(width, env)
+  return lsum
  
 def end(l):
   ''' move OffsetCoord to the end of a symbol and mirror it'''
-  return (lambda width, env: OffsetCoord(width * env['bitwidth'], 0) - l(width, env))
+  def end(width, env):
+    return OffsetCoord(width * env['bitwidth'], 0) - l(width, env)
+  return end
 
 def mirror(l):
   ''' returns lambda that mirrors point around the origin, use for transitions'''
-  return (lambda width, env: -l(width, env))
+  def mirror(width, env):
+    return -l(width, env)
+  return mirror
 
 def left(l):
   ''' returns lambda that calculates point left of a transition center'''
-  return (lambda width, env: -l(width, env))
+  def left(width, env):
+    return -l(width, env)
+  return left
  
 def right(l):
   ''' returns lambda that calculates point right of transition center'''
-  return (lambda width, env: l(width, env))
+  def right(width, env):
+    return l(width, env)
+  return right
 
 def combinate(d1, d2):
   result = {}
@@ -48,26 +58,24 @@ def _populate_mirrored(table):
     complete[key] = paths;
 
     # most likely a symbol background
-    print(key)
     if not isinstance(key, tuple):
       continue
-    print(key)
 
     swapped = (key[1], key[0])
 
     # check if mirrored is defined
     # if yes, skip item, otherwise produce mirrored
     if swapped in table:
+      print('skipping {0}'.format(swapped))
       next
     
     mirrored = []
     for path in paths:
       mirrored.append(mirror_path(path))
 
-    complete[swapped] = mirrored
+    complete[swapped] = list(reversed(mirrored))
     
   return complete
-  
 
 y_offsets = {
   'c' : (lambda width, env: OffsetCoord(0, 0)),
@@ -151,8 +159,7 @@ transitions = {
     ([left(a_ec), right(a_sc)], 'c'),
     ],
   ('S', 'U') : [
-    ([left(a_eb), right(a_sb)], 'c'),
-    ([left(a_ea), right(a_sa)], 'c'),
+    ([right(a_sa), right(a_ec), right(a_sb)], 'c'),
     ],
   ('S', 'D') : [
     ([right(a_sb), right(a_ec), right(a_sa)], 'c'),
@@ -165,7 +172,8 @@ transitions = {
     ],
 
   ('L', 'L') : [
-    ([left(a_sb), right(a_sb)], 'c'),
+    ([left(a_sb), left(a_eb)], 'l'),
+    ([right(a_eb), right(a_sb)], 'c'),
     ],
   ('L', 'H') : [
     ([left(a_sb), right(a_sa)], 'c'),
@@ -179,22 +187,24 @@ transitions = {
     ([left(a_ec), right(a_sc)], 'c'),
     ],
   ('L', 'U') : [
-    ([left(a_sb), right(a_sa)], 'c'),
-    ([left(a_ec), right(a_sb)], 'c'),
+    ([left(a_sb), left(a_ec)], 'l'),
+    ([right(a_sa), right(a_ec), right(a_sb)], 'c'),
     ],
   ('L', 'D') : [
-    ([left(a_sb), right(a_sa)], 'c'),
-    ([left(a_ec), right(a_sb)], 'c'),
+    ([left(a_sb), left(a_ec)], 'l'),
+    ([right(a_sa), right(a_ec), right(a_sb)], 'c'),
     ],
   ('L', 'CL') : [
-    ([left(a_sb), right(a_sb)], 'c'),
+    ([left(a_sb), left(a_eb)], 'l'),
+    ([right(a_eb), right(a_sb)], 'c'),
     ],
   ('L', 'CH') : [
     ([left(a_sb), right(a_sa)], 'c'),
     ],
   
   ('H', 'H') : [
-    ([left(a_sa), right(a_sa)], 'c'),
+    ([left(a_sa), left(a_ea)], 'l'),
+    ([right(a_ea), right(a_sa)], 'c'),
     ],
   ('H', 'Z') : [
     ([left(a_sa), right(a_ec)], 'c'),
@@ -205,57 +215,56 @@ transitions = {
     ([left(a_ec), right(a_sc)], 'c'),
     ],
   ('H', 'U') : [
-    ([left(a_sa), right(a_sb)], 'c'),
-    ([left(a_ec), right(a_sa)], 'c'),
+    ([left(a_sa), left(a_ec)], 'l'),
+    ([right(a_sa), right(a_ec), right(a_sb)], 'c'),
     ],
   ('H', 'D') : [
-    ([left(a_sa), right(a_sb)], 'c'),
-    ([left(a_ec), right(a_sa)], 'c'),
+    ([left(a_sa), left(a_ec)], 'l'),
+    ([right(a_sa), right(a_ec), right(a_sb)], 'c'),
     ],
   ('H', 'CL') : [
     ([left(a_sa), right(a_sb)], 'c'),
     ],
   ('H', 'CH') : [
-    ([left(a_sa), right(a_sa)], 'c'),
+    ([left(a_sa), left(a_ea)], 'l'),
+    ([right(a_ea), right(a_sa)], 'c'),
     ],
 
   ('Z', 'Z') : [
-    ([left(a_sc), right(a_sc)], 'c'),
+    ([left(a_sc), left(a_ec)], 'l'),
+    ([right(a_ec), right(a_sc)], 'c'),
     ],
   ('Z', 'X') : [
-    ([left(a_sc), right(a_sc)], 'c'),
+    ([left(a_sc), left(a_ec)], 'l'),
+    ([right(a_ec), right(a_sc)], 'c'),
     ],
   ('Z', 'U') : [
-    ([left(a_sc), right(a_ec)], 'c'),
-    ([left(a_ec), right(a_sb)], 'c'),
-    ([left(a_ec), right(a_sa)], 'c'),
+    ([left(a_sc), left(a_ec)], 'l'),
+    ([right(a_sa), right(a_ec), right(a_sb)], 'c'),
     ],
   ('Z', 'D') : [
-    ([left(a_sc), right(a_ec)], 'c'),
-    ([left(a_ec), right(a_sb)], 'c'),
-    ([left(a_ec), right(a_sa)], 'c'),
+    ([left(a_sc), left(a_ec)], 'l'),
+    ([right(a_sa), right(a_ec), right(a_sb)], 'c'),
     ],
   ('Z', 'CL') : [
-    ([left(a_sc), left(a_sb)], 'c'),
+    ([left(a_sc), left(a_sb)], 'l'),
     ([left(a_sb), right(a_sb)], 'c'),
     ],
   ('Z', 'CH') : [
-    ([left(a_sc), left(a_sa)], 'c'),
-    ([left(a_sa), right(a_sa)], 'c'),
+    ([left(a_sc), left(a_sa), right(a_sa)], 'c'),
     ],
 
   ('X', 'X') : [
-    ([left(a_sc), right(a_sc)], 'c'),
+    ([left(a_sc), left(a_ec)], 'l'),
+    ([right(a_ec), right(a_sc)], 'c'),
     ],
   ('X', 'U') : [
-    ([left(a_sc), right(a_ec)], 'c'),
-    ([left(a_ec), right(a_sb)], 'c'),
-    ([left(a_ec), right(a_sa)], 'c'),
+    ([left(a_sc), right(a_ec)], 'l'),
+    ([right(a_sa), right(a_ec), right(a_sb)], 'c'),
     ],
   ('X', 'D') : [
-    ([left(a_sc), right(a_ec)], 'c'),
-    ([left(a_ec), right(a_sb)], 'c'),
-    ([left(a_ec), right(a_sa)], 'c'),
+    ([left(a_sc), right(a_ec)], 'l'),
+    ([right(a_sa), right(a_ec), right(a_sb)], 'c'),
     ],
   ('X', 'CL') : [
     ([left(a_sc), left(a_sb)], 'c'),
@@ -267,12 +276,14 @@ transitions = {
     ],
 
   ('U', 'U') : [
-    ([left(a_sb), right(a_sb)], 'c'),
-    ([left(a_sa), right(a_sa)], 'c'),
+    ([left(a_sb), left(a_eb)], 'l'),
+    ([left(a_sa), left(a_ea)], 'l'),
+    ([right(a_eb), right(a_sb)], 'c'),
+    ([right(a_ea), right(a_sa)], 'c'),
     ],
   ('U', 'D') : [
-    ([left(a_sa), right(a_sb)], 'c'),
-    ([left(a_sb), right(a_sa)], 'c'),
+    ([left(a_sa), left(a_ec), left(a_sb)], 'l'),
+    ([right(a_sa), right(a_ec), right(a_sb)], 'c'),
     ],
   ('U', 'CL') : [
     ([left(a_sa), right(a_sb)], 'c'),
@@ -284,58 +295,54 @@ transitions = {
     ],
 
   ('D', 'D') : [
-    ([left(a_sa), right(a_sb)], 'c'),
-    ([left(a_sb), right(a_sa)], 'c'),
+    ([left(a_sa), left(a_ec), left(a_sb)], 'l'),
+    ([right(a_sa), right(a_ec), right(a_sb)], 'c'),
+    ],
+  ('D', 'H') : [
+    ([right(a_sa), right(a_ec)], 'l'),
+    ([left(a_sa), left(a_ec), left(a_sb)], 'c'),
     ],
   ('D', 'CL') : [
     ([left(a_sa), left(a_sb)], 'c'),
     ([left(a_sb), right(a_sb)], 'c'),
     ],
   ('D', 'CH') : [
-    ([left(a_sa), left(a_sb)], 'c'),
     ([left(a_sa), right(a_sa)], 'c'),
+    ([left(a_sa), left(a_sb)], 'l'),
     ],
 
   ('CL', 'Z') : [
-    ([left(a_sc), left(a_sb)], 'c'),
-    ([left(a_sc), right(a_sc)], 'c'),
+    ([left(a_sb), left(a_sc), right(a_sc)], 'c'),
     ],
   ('CL', 'X') : [
-    ([left(a_sc), left(a_sb)], 'c'),
-    ([left(a_sc), right(a_sc)], 'c'),
+    ([left(a_sb), left(a_sc), right(a_sc)], 'c'),
     ],
-  ('CH', 'D') : [
-    ([left(a_sa), left(a_sb)], 'c'),
-    ([left(a_sb), right(a_sb)], 'c'),
-    ([left(a_sa), right(a_sa)], 'c'),
+  ('CL', 'D') : [
+    ([right(a_sa), left(a_sa), left(a_sb), right(a_sb)], 'c'),
     ],
   ('CL', 'CL') : [
-    ([left(a_sb), right(a_sb)], 'c'),
+    ([left(a_sb), left(a_eb)], 'l'),
+    ([right(a_eb), right(a_sb)], 'c'),
     ],
   ('CL', 'CH') : [
-    ([left(a_sb), left(a_sa)], 'c'),
-    ([left(a_sa), right(a_sa)], 'c'),
+    ([left(a_sb), left(a_sa), right(a_sa)], 'c'),
     ],
 
   ('CH', 'Z') : [
-    ([left(a_sc), left(a_sa)], 'c'),
-    ([left(a_sc), right(a_sc)], 'c'),
+    ([left(a_sa), left(a_sc), right(a_sc)], 'c'),
     ],
   ('CH', 'X') : [
-    ([left(a_sc), left(a_sa)], 'c'),
-    ([left(a_sc), right(a_sc)], 'c'),
+    ([left(a_sa), left(a_sc), right(a_sc)], 'c'),
     ],
   ('CH', 'D') : [
-    ([left(a_sa), left(a_sb)], 'c'),
-    ([left(a_sb), right(a_sb)], 'c'),
-    ([left(a_sa), right(a_sa)], 'c'),
+    ([right(a_sa), left(a_sa), left(a_sb), right(a_sb)], 'c'),
     ],
   ('CH', 'CH') : [
-    ([left(a_sa), right(a_sa)], 'c'),
+    ([left(a_sa), left(a_ea)], 'l'),
+    ([right(a_ea), right(a_sa)], 'c'),
     ],
   ('CH', 'CL') : [
-    ([left(a_sa), left(a_sb)], 'c'),
-    ([left(a_sb), right(a_sb)], 'c'),
+    ([left(a_sa), left(a_sb), right(a_sb)], 'c'),
     ],
 }
 transitions = _populate_mirrored(transitions)
@@ -346,7 +353,7 @@ backgrounds = {
     ],
 
   ('U', 'S') : [
-    ([left(a_sb), a_eb, a_ea, left(a_sa)], 'c'),
+    ([left(a_sb), a_ec, left(a_sa)], 'c'),
     ],
   ('U', 'L') : [
     ([a_ec, left(a_sa), left(a_sb)], 'c'),
