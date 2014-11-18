@@ -66,8 +66,7 @@ def _populate_mirrored(table):
     # check if mirrored is defined
     # if yes, skip item, otherwise produce mirrored
     if swapped in table:
-      print('skipping {0}'.format(swapped))
-      next
+      continue
     
     mirrored = []
     for path in paths:
@@ -275,6 +274,14 @@ transitions = {
     ([left(a_sa), right(a_sa)], 'c'),
     ],
 
+  ('U', 'Z') : [
+    ([right(a_sc), left(a_ec)], 'c'),
+    ([left(a_sa), left(a_ec), left(a_sb)], 'l'),
+    ],
+  ('U', 'X') : [
+    ([right(a_sc), left(a_ec)], 'c'),
+    ([left(a_sa), left(a_ec), left(a_sb)], 'l'),
+    ],
   ('U', 'U') : [
     ([left(a_sb), left(a_eb)], 'l'),
     ([left(a_sa), left(a_ea)], 'l'),
@@ -285,32 +292,55 @@ transitions = {
     ([left(a_sa), left(a_ec), left(a_sb)], 'l'),
     ([right(a_sa), right(a_ec), right(a_sb)], 'c'),
     ],
+  ('U', 'H') : [
+    ([right(a_sa), right(a_ec)], 'c'),
+    ([left(a_sa), left(a_ec), left(a_sb)], 'l'),
+    ],
+  ('U', 'L') : [
+    ([right(a_sb), right(a_ec)], 'c'),
+    ([left(a_sa), left(a_ec), left(a_sb)], 'l'),
+    ],
   ('U', 'CL') : [
-    ([left(a_sa), right(a_sb)], 'c'),
-    ([left(a_sb), right(a_ec)], 'c'),
+    ([left(a_sb), right(a_sb)], 'c'),
+    ([left(a_sa), left(a_sb)], 'l'),
     ],
   ('U', 'CH') : [
-    ([left(a_sb), right(a_sa)], 'c'),
-    ([left(a_sa), right(a_ec)], 'c'),
+    ([left(a_sa), right(a_sa)], 'c'),
+    ([left(a_sa), left(a_sb)], 'l'),
     ],
 
+  ('D', 'Z') : [
+    ([right(a_sc), left(a_ec)], 'c'),
+    ([left(a_sa), left(a_ec), left(a_sb)], 'l'),
+    ],
+  ('D', 'X') : [
+    ([right(a_sc), left(a_ec)], 'c'),
+    ([left(a_sa), left(a_ec), left(a_sb)], 'l'),
+    ],
   ('D', 'D') : [
     ([left(a_sa), left(a_ec), left(a_sb)], 'l'),
     ([right(a_sa), right(a_ec), right(a_sb)], 'c'),
     ],
   ('D', 'H') : [
-    ([right(a_sa), right(a_ec)], 'l'),
-    ([left(a_sa), left(a_ec), left(a_sb)], 'c'),
+    ([right(a_sa), right(a_ec)], 'c'),
+    ([left(a_sa), left(a_ec), left(a_sb)], 'l'),
+    ],
+  ('D', 'L') : [
+    ([right(a_sb), right(a_ec)], 'c'),
+    ([left(a_sa), left(a_ec), left(a_sb)], 'l'),
     ],
   ('D', 'CL') : [
-    ([left(a_sa), left(a_sb)], 'c'),
     ([left(a_sb), right(a_sb)], 'c'),
+    ([left(a_sa), left(a_sb)], 'l'),
     ],
   ('D', 'CH') : [
     ([left(a_sa), right(a_sa)], 'c'),
     ([left(a_sa), left(a_sb)], 'l'),
     ],
 
+  ('CL', 'H') : [
+    ([left(a_sb), right(a_sa)], 'c'),
+    ],
   ('CL', 'Z') : [
     ([left(a_sb), left(a_sc), right(a_sc)], 'c'),
     ],
@@ -328,6 +358,9 @@ transitions = {
     ([left(a_sb), left(a_sa), right(a_sa)], 'c'),
     ],
 
+  ('CH', 'L') : [
+    ([left(a_sa), right(a_sb)], 'c'),
+    ],
   ('CH', 'Z') : [
     ([left(a_sa), left(a_sc), right(a_sc)], 'c'),
     ],
@@ -373,14 +406,6 @@ backgrounds = {
     ([left(a_sa), a_sa, a_sb, left(a_sb)], 'c'),
     ],
   ('U', 'D') : [
-    ([a_ec, left(a_sa), left(a_sb)], 'c'),
-    ],
-
-  ('U', 'CH') : [
-    ([a_ec, left(a_sa), left(a_sb)], 'c'),
-    ],
-
-  ('U', 'CL') : [
     ([a_ec, left(a_sa), left(a_sb)], 'c'),
     ],
 }
